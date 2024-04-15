@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <h1>Weather Forecast</h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="./stylee.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button><img src="https://w7.pngwing.com/pngs/582/430/png-transparent-search-magnifier-find-zoom-glass-seo-optimization-instagram-icon.png" alt=""></button>
+        </div>
+        <div class="error">
+            <p>Invalid city name</p>
+        </div>
+        <div class="weather"><img src="https://cdn-icons-png.freepik.com/256/414/414936.png?ga=GA1.1.1893615975.1690692209&" class="weather-icon">
+        <h1 class="temp">27°C</h1>
+        <h2 class="city">Hyderabad</h2>
+        <div class="details">
+            <div class="col">
+                <img src="https://cdn-icons-png.freepik.com/256/7334/7334238.png?ga=GA1.1.1893615975.1690692209&" alt=""> 
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div class="col">
+                <img src="https://cdn-icons-png.freepik.com/256/6423/6423059.png?ga=GA1.1.1893615975.1690692209&" alt="">
+                <div>
+                    <p class="wind">15km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const apikey = "fd6cf057505e20088ef7a7f9aa313ad8";
+        const apiurl ="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weathericon = document.querySelector(".weather-icon");
+
+        async function checkWeather(city){
+            const response= await fetch(`${apiurl}${city}&appid=${apikey}`);
+
+            if(response.status ==404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }else{
+                var data = await response.json();
+
+           
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML= Math.round(data.main.temp) + "°C";
+            document.querySelector(".humidity").innerHTML=data.main.humidity + "%";
+            document.querySelector(".wind").innerHTML=data.wind.speed + "km/h";
+
+            if(data.weather[0].main == "Clouds"){
+                weathericon.src = "https://cdn-icons-png.freepik.com/256/414/414876.png?ga=GA1.1.1893615975.1690692209&";
+            }
+            else if(data.weather[0].main == "Clear"){
+                weathericon.src = "https://cdn-icons-png.freepik.com/256/191/191043.png?ga=GA1.1.1893615975.1690692209&";
+            }
+            else if(data.weather[0].main == "Rain"){
+                weathericon.src = "https://cdn-icons-png.freepik.com/256/1163/1163657.png?ga=GA1.1.1893615975.1690692209&";
+            }
+            else if(data.weather[0].main == "Drizzle"){
+                weathericon.src = "https://cdn-icons-png.freepik.com/256/7452/7452603.png?ga=GA1.1.1893615975.1690692209&";
+            }
+            if(data.weather[0].main == "Mist"){
+                weathericon.src = "https://cdn-icons-png.freepik.com/256/11103/11103939.png?ga=GA1.1.1893615975.1690692209&";
+            }
+
+            document.querySelector(".weather").style.display="block";
+            document.querySelector(".error").style.display="none";
+            }
+
+        }
+
+    searchBtn.addEventListener("click",()=>{
+
+    checkWeather(searchBox.value);
+    })
+    </script>
+</body>
+</html>
